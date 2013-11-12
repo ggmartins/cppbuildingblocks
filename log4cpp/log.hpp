@@ -11,17 +11,17 @@ class Log
 {
 public:
     //c++11
-    log4cpp::Category& root=log4cpp::Category::getRoot();
-    log4cpp::Category& module1=log4cpp::Category::getInstance(std::string("module1"));
-    log4cpp::Category& module1_sector1=log4cpp::Category::getInstance(std::string("module1.module1_sector1"));
+    log4cpp::Category& main=log4cpp::Category::getRoot();
+    log4cpp::Category& module=log4cpp::Category::getInstance(std::string("module"));
+    log4cpp::Category& moduleSector=log4cpp::Category::getInstance(std::string("module.sector"));
 
     Log(std::string initFileName)
     {
 	log4cpp::PropertyConfigurator::configure(initFileName);
-	root.info("Log initialized (root)");
+	main.info("Log initialized (main)");
 	//root.warn("");
 	//root.error("");
-	//root.debig("");
+	//root.debug("");
 
 //	module1.info("Log initialized (module1) [%s]", initFileName);
 	//module1.warn("");
@@ -32,7 +32,7 @@ public:
 	//module1_sector.warn("");
 	//module1_sector.error("");
 	//module1_sector.debug("");
-	root << log4cpp::Priority::INFO << "Done." << log4cpp::eol;
+	main << log4cpp::Priority::INFO << "Done." << log4cpp::eol;
     }
 
     ~Log() { log4cpp::Category::shutdown(); }

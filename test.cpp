@@ -37,16 +37,19 @@ BOOST_AUTO_TEST_CASE (elapsed_test1)
   BOOST_CHECK( to_string(elapsed()).find("00:00:02") != std::string::npos );
   elapsed.reset();
   sleep(1);
-  std::cout << elapsed.getsecs() << " elapsed.getsecs()" << std::endl;
+  std::cout << elapsed.getsecs() << " elapsed.getsecs()\n" << std::endl;
   BOOST_CHECK( to_string(elapsed()).find("00:00:01") != std::string::npos );
 
 }
 
 BOOST_AUTO_TEST_CASE (log_test1)
 {
+    std::cout << "** log_test1 **" << std::endl;
     Log log("log4cpp/log4cpp.properties");
-    std::cout << "** elapsed_test1 **" << std::endl;
-    log.module1.info("testlog4cpp");
+    log.main.info("testlog4cpp");
+    log.module.info("testlog4cpp");
+    log.module.error("testlog4cpp ERROR");
+    log.moduleSector.info("passed here");
     BOOST_CHECK( 0==0 );
 }
 

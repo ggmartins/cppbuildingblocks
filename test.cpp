@@ -5,9 +5,11 @@
 //using boost::test_tools::output_test_stream;
 #include "code_commons.h"
 #include "about.hpp"
-
+//elapsed
 #include "elapsed/elapsed.hpp"
 using namespace boost::posix_time;
+//logging
+#include "log4cpp/log.hpp"
 
 BOOST_AUTO_TEST_SUITE (main1)
 
@@ -38,6 +40,14 @@ BOOST_AUTO_TEST_CASE (elapsed_test1)
   std::cout << elapsed.getsecs() << " elapsed.getsecs()" << std::endl;
   BOOST_CHECK( to_string(elapsed()).find("00:00:01") != std::string::npos );
 
+}
+
+BOOST_AUTO_TEST_CASE (log_test1)
+{
+    Log log("log4cpp/log4cpp.properties");
+    std::cout << "** elapsed_test1 **" << std::endl;
+    log.module1.info("testlog4cpp");
+    BOOST_CHECK( 0==0 );
 }
 
 

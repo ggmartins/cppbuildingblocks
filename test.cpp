@@ -29,7 +29,7 @@ BOOST_AUTO_TEST_CASE (elapsed_test1)
   std::cout << "** elapsed_test1 **" << std::endl;
   sleep(1);
   double time=elapsed().total_milliseconds();
-  BOOST_CHECK( (time > 1000.0) && (time < 1100.0) );
+  BOOST_CHECK( (time >= 1000.0) && (time < 1100.0) );
   std::cout << elapsed() << " elapsed()" << std::endl;
   BOOST_CHECK( to_string(elapsed()).find("00:00:01") != std::string::npos );
   sleep(1);
@@ -42,6 +42,10 @@ BOOST_AUTO_TEST_CASE (elapsed_test1)
 
 }
 
+#define LOG_MAIN	"main.log.1"
+#define LOG_MODULE	"module.log"
+#define LOG_SECTOR	"sector.log"
+
 BOOST_AUTO_TEST_CASE (log_test1)
 {
     std::cout << "** log_test1 **" << std::endl;
@@ -50,7 +54,35 @@ BOOST_AUTO_TEST_CASE (log_test1)
     log.module.info("testlog4cpp");
     log.module.error("testlog4cpp ERROR");
     log.moduleSector.info("passed here");
-    BOOST_CHECK( 0==0 );
+    log.moduleSector << log4cpp::Priority::INFO << "passed here" << log4cpp::eol;
+
+    std::ostringstream out;
+    std::ifstream in(LOG_MAIN, std::ios::in | std::ios::binary);
+    if (in)
+    {
+      out << in.rdbuf();
+      in.close();
+    }
+    BOOST_CHECK( out.str().find("ERROR") != std::string::npos );
+
+    out.str("");
+    in.open(LOG_MODULE, std::ios::in | std::ios::binary);
+    if (in)
+    {
+      out << in.rdbuf();
+      in.close();
+    }
+    BOOST_CHECK( out.str().find("ERROR") != std::string::npos );
+
+    out.str("");
+    in.open(LOG_SECTOR, std::ios::in | std::ios::binary);
+    if (in)
+    {
+      out << in.rdbuf();
+      in.close();
+    }
+    BOOST_CHECK( out.str().find("passed here") != std::string::npos );
+
 }
 
 

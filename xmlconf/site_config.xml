@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE boost_serialization>
+<boost_serialization signature="serialization::archive" version="9">
+<this class_id="0" object_id="_0">
+	<nodes class_id="1" tracking_level="0" version="0">
+		<count>2</count>
+		<item_version>1</item_version>
+		<item class_id="2" tracking_level="0" version="1">
+			<loaddir>site_heavy</loaddir>
+			<ignorelist></ignorelist>
+			<status>0</status>
+			<size>0</size>
+		</item>
+		<item>
+			<loaddir>site_light</loaddir>
+			<ignorelist></ignorelist>
+			<status>0</status>
+			<size>0</size>
+		</item>
+	</nodes>
+</this>
+</boost_serialization>
+

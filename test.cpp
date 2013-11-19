@@ -100,18 +100,18 @@ BOOST_AUTO_TEST_CASE (config_test1)
 
     cn1.loaddir="site_heavy";
     cn2.loaddir="site_light";
-    config1.save("site_config.xml");
+    config1.save("xmlconf/site_config.xml");
 
-    config2.load("site_config.xml");
+    config2.load("xmlconf/site_config.xml");
     std::cout << config2 << std::endl; 
     std::cout << config1 << std::endl; 
-    BOOST_CHECK( CHK_FILE_FOR_STR("site_config.xml", "<loaddir>site_heavy") );
+    BOOST_CHECK( CHK_FILE_FOR_STR("xmlconf/site_config.xml", "<loaddir>site_heavy") );
 
     ConfigNode &cn3=config2.getConfigNode("site_light");
     std::cout << cn3 << std::endl;
     cn3.ignorelist="TEST";
     config2.save();
-    BOOST_CHECK( CHK_FILE_FOR_STR("site_config.xml", "<ignorelist>TEST") );
+    BOOST_CHECK( CHK_FILE_FOR_STR("xmlconf/site_config.xml", "<ignorelist>TEST") );
 
     cn3=config2.getConfigNode("afasdsdfdsa");
     std::cout << cn3 << std::endl;   

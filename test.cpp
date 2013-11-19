@@ -10,6 +10,8 @@
 using namespace boost::posix_time;
 //logging
 #include "log4cpp/log.hpp"
+//config/serialization
+#include "xmlconf/xmlconf.hpp"
 
 BOOST_AUTO_TEST_SUITE (main1)
 
@@ -82,9 +84,45 @@ BOOST_AUTO_TEST_CASE (log_test1)
       in.close();
     }
     BOOST_CHECK( out.str().find("passed here") != std::string::npos );
+    std::cout << std::endl;
 
 }
 
+
+BOOST_AUTO_TEST_CASE (config_test1)
+{
+    Config config1, config2;
+    ConfigNode cn1, cn2;
+    config1.addConfigNode(cn1);
+    config1.addConfigNode(cn2);
+
+    std::cout << "** config_test1 **" << std::endl;
+
+    cn1.loaddir="site_heavy";
+    cn2.loaddir="site_light";
+    config1.save("site_config.xml");
+
+    config2.load("site_config.xml");
+    std::cout << config2 << std::endl; 
+    std::cout << config1 << std::endl; 
+    BOOST_CHECK( CHK_FILE_FOR_STR("site_config.xml", "<loaddir>site_heavy") );
+
+    ConfigNode &cn3=config2.getConfigNode("site_light");
+    std::cout << cn3 << std::endl;
+    cn3.ignorelist="TEST";
+    config2.save();
+    BOOST_CHECK( CHK_FILE_FOR_STR("site_config.xml", "<ignorelist>TEST") );
+
+    cn3=config2.getConfigNode("afasdsdfdsa");
+    std::cout << cn3 << std::endl;   
+    BOOST_CHECK( cn3.loaddir.empty() );
+      
+    cn1.init();
+    config1.load(); //reload
+    std::cout << config1 << std::endl;
+    BOOST_CHECK (config1.to_string().find("/TEST")  != std::string::npos) ;
+
+}
 
 BOOST_AUTO_TEST_SUITE_END()
 

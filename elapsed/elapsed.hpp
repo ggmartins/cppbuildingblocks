@@ -1,3 +1,5 @@
+#ifndef ELAPSED_HPP
+#define ELAPSED_HPP
 #include <boost/date_time.hpp>
 #include <boost/format.hpp>
 
@@ -16,7 +18,7 @@ public:
 
     void reset()
     {
-	time=timeelapsed::gettimenow();
+	time=gettimenow();
     }
 
     boost::posix_time::time_duration operator() () const {
@@ -31,21 +33,13 @@ public:
     
 
 };
-/*
-int main(int argc, char **argv)
-{
-    using namespace boost::posix_time;
-    timeelapsed elapsed;
 
-    sleep(1);
-    double time=elapsed().total_milliseconds();
-    std::cout << "time=" << time << std::endl;
-    std::cout << "elapsed() " << elapsed() << std::endl;
-    sleep(1);
-    std::cout << "elapsed.getsecs() " << elapsed.getsecs() << std::endl;
-    elapsed.reset();
-    sleep(1);
-    std::cout << "elapsed.getsecs() " << elapsed.getsecs() << std::endl;
-    return 0;
-}
-*/
+
+#define TIME(insert_code_here) do { \
+    using namespace boost::posix_time; \
+    timeelapsed elapsed; \
+    insert_code_here \
+    std::cout << "elapsed.getsecs() " << elapsed.getsecs() << std::endl; \
+} while(0); 
+
+#endif

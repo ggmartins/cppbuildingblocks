@@ -1,3 +1,5 @@
+#ifndef XMLCONF_HPP
+#define XMLCONF_HPP
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -191,3 +193,5 @@ bool CHK_FILE_FOR_STR(std::string filename, std::string str)
 
 //BOOST_CLASS_IMPLEMENTATION(ConfigNode, object_serializable)
 BOOST_CLASS_IMPLEMENTATION(Config, object_serializable)
+
+#endif //XMLCONF_HPP

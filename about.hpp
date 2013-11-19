@@ -1,16 +1,14 @@
-#ifndef _ABOUT
-#define _ABOUT
+#ifndef ABOUT_HPP
+#define ABOUT_HPP
 
 #define REVISION_FILE "REVISION"
+//no namespace for now
 //namespace code_commons {
-
 
 class About {
 public:
-  About ()
-  {
-     this->s="C++ Code Commons";
-  }
+  About () : s("C++ Code Commons")  {}
+
   std::string str() { return " .";}
 
 private:

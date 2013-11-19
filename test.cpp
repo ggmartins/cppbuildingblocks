@@ -41,7 +41,9 @@ BOOST_AUTO_TEST_CASE (elapsed_test1)
   sleep(1);
   std::cout << elapsed.getsecs() << " elapsed.getsecs()\n" << std::endl;
   BOOST_CHECK( to_string(elapsed()).find("00:00:01") != std::string::npos );
-
+  TIME(
+    sleep(2);
+  );
 }
 
 #define LOG_MAIN	"main.log.1"

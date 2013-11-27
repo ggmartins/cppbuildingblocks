@@ -15,6 +15,20 @@ inline std::string to_string (const T& t)
 }
 
 
+bool CHK_FILE_FOR_STR(std::string filename, std::string str)
+{
+  std::ostringstream out;
+  std::ifstream in(filename, std::ios::in | std::ios::binary);
+  if (in)
+  {
+    out << in.rdbuf();
+    in.close();
+  }
+  else return false;
+
+  return (out.str().find(str) != std::string::npos);
+} 
+
 // trim from start
 static inline std::string &ltrim(std::string &s) {
         s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));

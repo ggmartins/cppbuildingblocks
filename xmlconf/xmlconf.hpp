@@ -175,22 +175,6 @@ std::ostream& operator<<(std::ostream &os, const Config &config)
   return os << sout.str();
 }
 
-
-
-bool CHK_FILE_FOR_STR(std::string filename, std::string str)
-{
-  std::ostringstream out;
-  std::ifstream in(filename, std::ios::in | std::ios::binary);
-  if (in)
-  {
-    out << in.rdbuf();
-    in.close();
-  }
-  else return false; 
-
-  return (out.str().find(str) != std::string::npos);
-}
-
 //BOOST_CLASS_IMPLEMENTATION(ConfigNode, object_serializable)
 BOOST_CLASS_IMPLEMENTATION(Config, object_serializable)
 

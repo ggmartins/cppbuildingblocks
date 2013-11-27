@@ -12,6 +12,8 @@ using namespace boost::posix_time;
 #include "log4cpp/log.hpp"
 //config/serialization
 #include "xmlconf/xmlconf.hpp"
+//memfile
+#include "memfile/memfile.hpp"
 
 BOOST_AUTO_TEST_SUITE (main1)
 
@@ -121,9 +123,35 @@ BOOST_AUTO_TEST_CASE (config_test1)
       
     cn1.init();
     config1.load(); //reload
-    std::cout << config1 << std::endl;
+    std::cout << config1 << std::endl << std::endl;
     BOOST_CHECK (config1.to_string().find("/TEST")  != std::string::npos) ;
 
+}
+
+BOOST_AUTO_TEST_CASE (memfile_test1)
+{
+    std::cout << "** memfile_test1 **" << std::endl;
+    //TODO improve all of this
+    Memdir &memdir=Memdir::getInstance();
+    memdir.load("memfile/data");
+    std::cout << memdir.to_string(); 
+    mfmap_t mfm=memdir.getMap("memfile/data");
+
+    for_each(
+	mfm.begin(),
+	mfm.end(),
+	[]( cd::pair <std::string, buffer_t> p) { std::cout << p.first << std::endl; }
+    );
+                                                                                                                                                      
+    mfmap_t::iterator it=mfm.find("memfile/data/file2.dat");
+    if(it!=mfm.end())
+    {
+	std::cout << "size: "<<it->second.size << std::endl << "content: ";
+	for (int i=0; i< it->second.size; i++)
+	    std::cout << it->second.data[i];
+	std::cout << std::endl;
+	BOOST_CHECK( (it->second.size > 0) &&  (it->second.size < 4000) );
+    } BOOST_CHECK( it!=mfm.end() );
 }
 
 BOOST_AUTO_TEST_SUITE_END()

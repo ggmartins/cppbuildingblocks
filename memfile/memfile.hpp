@@ -1,13 +1,16 @@
-#ifndef MEMFILE_H
-#define MEMFILE_H
+#ifndef MEMFILE_HPP
+#define MEMFILE_HPP
 
 #include <boost/filesystem/fstream.hpp>
+#include <boost/container/flat_map.hpp>
 #include <boost/filesystem.hpp>
 #include <map>
+#include <utility>
 #include <iostream>
 #include <sstream>
 
 namespace fs = boost::filesystem;
+namespace cd = boost::container::container_detail;
 
 class MemFile {
   
@@ -16,7 +19,6 @@ class MemFile {
   uint8_t *buf;
   MemFile(MemFile const&);
   void operator=(MemFile const&);
-  //friend std::ostream & operator<<(std::ostream &out, MemFile mf);
 
 public:
  
@@ -37,12 +39,12 @@ public:
   }
 
   uint8_t *buffer() { return buf; }
-
+  std::string path() { return mfpath.string(); }
   std::string to_string() { return std::string((char *)buf); }
-  std::string to_print() 
+  std::string to_print()
   { 
     std::ostringstream sout;
-    sout << "[" << mfpath.string() <<"," << mfsize <<"]"; 
+    sout << "[" << mfpath.string() << "," << mfsize <<"]"; 
     return sout.str(); 
   }
 
@@ -54,17 +56,17 @@ public:
   }
 };
 
-/*std::ostream & operator<<(std::ostream &out, MemFile mf)
-{
-  std::ostringstream sout;
-  sout << mf.to_print();
-  return out << sout;
-}*/
+typedef struct {
+  uint8_t *data;
+  int size;
+} buffer_t;
+typedef std::multimap < std::string, MemFile *  > memfile_t;
+typedef boost::container::flat_map< std::string,  buffer_t> mfmap_t;
 
 class Memdir  {
 
-  typedef std::multimap < fs::path, MemFile *  > memfile_t;
   memfile_t memfile;
+  mfmap_t mfmap;
   std::string dirname;
   fs::path mdpath;
 
@@ -91,13 +93,29 @@ public:
       for (fs::directory_iterator dir_iter (mdpath); dir_iter != end_iter; ++dir_iter) 
       {
         if (fs::is_regular_file (dir_iter->status ()))
-          memfile.insert (memfile_t::value_type (*dir_iter,  new MemFile(*dir_iter) ));
+          memfile.insert (memfile_t::value_type (dname,  new MemFile(*dir_iter) ));
       }
       return 0;
     }
     //TODO catch ex
     //catch (const filesystem_error& ex)
     return 1;
+  }
+
+
+  const mfmap_t& getMap(std::string dname)
+  {
+    cd::pair <memfile_t::iterator, memfile_t::iterator> mfpair;
+    mfpair=memfile.equal_range(dname);
+
+    mfmap.clear();
+    for(memfile_t::iterator it=mfpair.first; it!=mfpair.second; it++)
+    {
+      buffer_t buffer = {  .data = (*it).second->buffer(), .size = (*it).second->size() };
+      mfmap.emplace(((*it).second)->path(), buffer );
+    }
+    
+    return mfmap;
   }
 
   std::string to_string()
@@ -119,14 +137,4 @@ public:
 }; // MEMDIR
 
 
-int main (int argc, char **argv)
-{
-
-  Memdir &memdir=Memdir::getInstance();
-  memdir.load("data");
-  std::cout << memdir.to_string();
-
-  return 0;
-}
-
-#endif //MEMFILE_H
+#endif //MEMFILE_HPP

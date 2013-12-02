@@ -30,7 +30,7 @@ public:
     {
       std::ifstream mfile(mf.string(), std::ifstream::binary);
       mfsize=fs::file_size(mf);
-      buf=new uint8_t(mfsize+1);
+      buf=new uint8_t[mfsize+1];
       memset(buf, 0, sizeof(uint8_t)*(mfsize+1));
       mfile.read((char *)buf, (int)mfsize);
       mfile.close();

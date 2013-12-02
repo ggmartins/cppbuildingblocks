@@ -90,7 +90,7 @@ class Config
   }
 public:
   friend std::ostream& operator<<(std::ostream &os, const Config &config);
-  Config(){}
+  Config(): filename("default.xml"){} 
   virtual ~Config () {}
 
   void addConfigNode(ConfigNode &node)
